@@ -5,11 +5,6 @@ function Home() {
     return (
         <div>
             <p>Home</p>
-            <SignedOut>
-                <SignInButton />
-            </SignedOut>
-
-            <UserButton />
         </div>
     )
 }
