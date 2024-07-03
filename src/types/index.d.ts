@@ -23,7 +23,7 @@ declare type UpdateUserParams = {
 declare type AddImageParams = {
     image: {
         title: string;
-        publicId: string;
+        publicId: string | undefined;
         transformationType: string;
         width: number;
         height: number;
@@ -42,7 +42,7 @@ declare type UpdateImageParams = {
     image: {
         _id: string;
         title: string;
-        publicId: string;
+        publicId: string | undefined;
         transformationType: string;
         width: number;
         height: number;

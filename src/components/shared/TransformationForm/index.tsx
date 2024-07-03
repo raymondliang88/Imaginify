@@ -34,7 +34,7 @@ import { getCldImageUrl } from "next-cloudinary"
 import { addImage, updateImage } from "@/lib/actions/image.action"
 import { useRouter } from "next/navigation"
 import { InsufficientCreditsModal } from "../InsufficientCreditsModal"
-import { TransformationFormProps, Transformations } from "@/types"
+import { AddImageParams, TransformationFormProps, Transformations, UpdateImageParams } from "@/types"
 
 export const formSchema = z.object({
     title: z.string(),
@@ -76,18 +76,18 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
             const transformationUrl = getCldImageUrl({
                 width: image?.width,
                 height: image?.height,
-                src: image?.publicId,
+                src: image?.publicId!,
                 ...transformationConfig
             })
 
-            const imageData = {
+            const imageData: AddImageParams['image'] = {
                 title: values.title,
                 publicId: image?.publicId,
                 transformationType: type,
-                width: image?.width,
-                height: image?.height,
+                width: image?.width!,
+                height: image?.height!,
                 config: transformationConfig,
-                secureURL: image?.secureURL,
+                secureURL: image?.secureURL!,
                 transformationURL: transformationUrl,
                 aspectRatio: values.aspectRatio,
                 prompt: values.prompt,
@@ -113,12 +113,13 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
             }
 
             if (action === 'Update') {
+                const updatedImageData: UpdateImageParams['image'] = {
+                    ...imageData,
+                    _id: String(data?._id)
+                }
                 try {
                     const updatedImage = await updateImage({
-                        image: {
-                            ...imageData,
-                            _id: data?._id
-                        },
+                        image: updatedImageData,
                         userId,
                         path: `/transformations/${data?._id}`
                     })
